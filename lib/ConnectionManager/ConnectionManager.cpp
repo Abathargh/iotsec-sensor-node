@@ -1,7 +1,6 @@
 #include "ConnectionManager.h"
-#include "certs.h"
+#include "../../certs/certs.h"
 
-#include <PubSubClient.h>
 #include <ESP8266WiFi.h>
 
 namespace Iotsec {
@@ -10,16 +9,14 @@ static WiFiClientSecure wifiClient;
 static PubSubClient mqttClient;
 static X509List caList;
 
-static ConnectionConfig config;
-
-
-void connect(ConnectionConfig conf) {
-    config = conf;
-
-    caList.append(cert1);
+void connect(ConnectionConfig &config) {
+	caList.append(cert1);
 	caList.append(cert2);
     wifiClient.setTrustAnchors(&caList);
-	wifiClient.setFingerprint(config.serverFingerprint);
+	wifiClient.setFingerprint(config.serverFingerprint.c_str());
+
+	mqttClient.setServer(config.domain.c_str(), config.port);
+	mqttClient.setClient(wifiClient);
 
 	WiFi.mode(WIFI_STA);
 	WiFi.begin(config.ssid, config.key);
@@ -32,7 +29,7 @@ void connect(ConnectionConfig conf) {
 	}
 
 	attempts = 0;
-	while(!mqttClient.connect(config.clientId, config.username, config.password)) {
+	while(!mqttClient.connect(config.clientId.c_str(), config.username.c_str(), config.password.c_str())) {
 		Serial.printf("Broker connection: attempt %d\n", attempts);
 		attempts++;
 		delay(500);
@@ -43,7 +40,7 @@ bool isConnected(void) {
         return WiFi.isConnected() && mqttClient.connected();
 }
 
-void reconnect(void) {
+void reconnect(ConnectionConfig &config) {
     int attempts = 0;
 	while(WiFi.status() != WL_CONNECTED) {
 		WiFi.reconnect();
@@ -53,11 +50,15 @@ void reconnect(void) {
 	}
 
 	attempts = 0;
-	while(!mqttClient.connect(config.clientId, config.username, config.password)) {
+	while(!mqttClient.connect(config.clientId.c_str(), config.username.c_str(), config.password.c_str())) {
 		Serial.printf("Broker connection: attempt %d\n", attempts);
 		attempts++;
-		delay(500);
+		delay(2000);
 	}
+}
+
+PubSubClient& mqttClientRef() {
+	return mqttClient;
 }
 
 }

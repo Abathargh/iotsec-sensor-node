@@ -65,20 +65,20 @@ constexpr int dhtPin = 2;
 constexpr int dhtType = DHT11;
 constexpr int numSensors = 3;
 constexpr int poolPeriod = 500;
-constexpr int loopPeriod = 1000;
+constexpr int loopPeriod = 2000;
 
 /* Device virtual entities */
 DHT DhtSensor(dhtPin, dhtType);
-Iotsec::Service<String> presenceService("presence");
+Iotsec::Service<uint8_t> presenceService("presence");
 Iotsec::Service<float> temperatureService("temperature");
 Iotsec::Service<float> humidityService("humidity");
 
 Iotsec::ServicePool<numSensors> servicePool(poolPeriod);
 
 /* Acquisition callback for the presence sensor */
-String acquirePresence() {
+uint8_t acquirePresence() {
 	int presence = digitalRead(presencePin);
-	return presence == 0 ? String("no-presence") : String("presence");
+	return (uint8_t)presence;
 }
 
 

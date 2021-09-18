@@ -2,7 +2,11 @@
 #define SERVICE_H_
 
 #include <PubSubClient.h>
+#include <string.h>
 #include <assert.h>
+
+constexpr char baseTopic[] = "sensor/service/";
+constexpr int baseTopicLength = 30;
 
 namespace Iotsec
 {
@@ -76,7 +80,7 @@ template<typename T>
 class Service : public Loopable
 {
     private:
-        const char* serviceName;
+        char serviceName[baseTopicLength];
         SensorCallback<T> callback;
     
     public:
@@ -88,13 +92,15 @@ class Service : public Loopable
 
 
 template<typename T>
-Service<T>::Service(const char* serviceName) : Loopable(), serviceName(serviceName) {
+Service<T>::Service(const char* service) : Loopable() {
     static_assert(std::is_arithmetic<T>::value || std::is_same<T, String>::value, "T can only be a number or a String");
+    snprintf(serviceName, baseTopicLength, "%s%s", baseTopic, service);
 }
 
 template<typename T>
-Service<T>::Service(String serviceName) : Loopable(), serviceName(serviceName.c_str()) {
+Service<T>::Service(String service) : Loopable() {
     static_assert(std::is_arithmetic<T>::value || std::is_same<T, String>::value, "T can only be a number or a String");
+    snprintf(serviceName, baseTopicLength, "%s%s", baseTopic, service);
 }
 
 template<typename T>

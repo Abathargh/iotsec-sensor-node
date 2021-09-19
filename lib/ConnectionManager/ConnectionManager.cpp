@@ -23,14 +23,12 @@ void connect(ConnectionConfig &config) {
 	
 	int attempts = 0;
 	while(WiFi.status() != WL_CONNECTED) {
-		Serial.printf("Wifi connection: attempt %d\n", attempts);
 		attempts++;
 		delay(500);
 	}
 
 	attempts = 0;
 	while(!mqttClient.connect(config.clientId.c_str(), config.username.c_str(), config.password.c_str())) {
-		Serial.printf("Broker connection: attempt %d\n", attempts);
 		attempts++;
 		delay(500);
 	}
@@ -44,14 +42,12 @@ void reconnect(ConnectionConfig &config) {
     int attempts = 0;
 	while(WiFi.status() != WL_CONNECTED) {
 		WiFi.reconnect();
-        Serial.printf("Wifi connection: attempt %d\n", attempts);
 		attempts++;
 		delay(500);
 	}
 
 	attempts = 0;
 	while(!mqttClient.connect(config.clientId.c_str(), config.username.c_str(), config.password.c_str())) {
-		Serial.printf("Broker connection: attempt %d\n", attempts);
 		attempts++;
 		delay(2000);
 	}

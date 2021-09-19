@@ -97,7 +97,10 @@ float acquireHumidity() {
 
 
 void setup() {
-	delay(3000);
+#ifdef DEBUG_ESP_PORT
+	Serial.begin(9600);
+#endif
+
 	config.clientId          = clientId;
 	config.domain            = domain;
 	config.key               = key;
@@ -106,18 +109,6 @@ void setup() {
 	config.serverFingerprint = serverFingerprint;
 	config.ssid              = ssid;
 	config.username          = username;
-
-	Serial.begin(9600);
-
-	Serial.println("id:" + config.clientId);
-	Serial.println("user:" + config.domain);
-	Serial.println("user:" + config.key);
-	Serial.println("user:" + config.password);
-	Serial.println("user:" + config.port);
-	Serial.println("user:" + config.serverFingerprint);
-	Serial.println("user:" + config.ssid);
-	Serial.println("user:" + config.username);
-
 
 	pinMode(presencePin, INPUT);
 	DhtSensor.begin();

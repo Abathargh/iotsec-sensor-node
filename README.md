@@ -23,7 +23,7 @@ The firmware was written in C++11, with some python scripts that are used to bot
 
 ### The Connection Manager module
 
-The Connection Manager module is tasked with the management of the WiFi and MQTT connection anr eventual re-connection. It internally uses a struct that can be passed at startup, to save the connection data and leverages it to reconnect if something goes wrong network-wise.
+The Connection Manager module is tasked with the management of the WiFi and MQTT connection and eventual re-connection. It internally uses a struct that can be passed at startup, to save the connection data and leverages it to reconnect if something goes wrong network-wise.
 
 ### The Service module
 
@@ -36,7 +36,7 @@ float acquireTemperature() {
 }
 ```
 
-Another construct that is available from the Service module is the **ServicePool** class, a templated class with parametrized length usable through the template parameter. This allows the user to define a pool of schedulable services at compile-time, calling the acquisition functions and forwarding their payloads to the broker, with a period between one service acquisition+forwading and the other that is user configurable. The schedule that is followed for these operations has a round-robin policy:
+Another construct that is available from the Service module is the **ServicePool** class, a templated class with parametrized length usable through the template parameter. This allows the user to define a pool of schedulable services at compile-time, calling the acquisition functions and forwarding their payloads to the broker, with a period between one service acquisition+forwarding and the other that is user configurable. The schedule that is followed for these operations has a round-robin policy:
 
 ```C++
 Iotsec::Service<String> presenceService("presence");
@@ -68,7 +68,7 @@ In order to build the firmware with the correct connection credentials, you have
 - **certs/certs.h**, which contains the chain certificates of the certificate authority formatted as c++ arrays of string literals, to be stored in the flash memory of the ESP (safer and less heavy on the already small RAM).
 - **data.json**, which is the *secrets* file and contains confidential data that is passed securely directly to the compiler without embedding it into the source code.
 
-This last point is implemented via passing the credentials as build flags for the C++ compiler, using the **Dynamic build flags** feature of the Platformio pipeline, where you can redirect the stdout of a script or executabe towards the build flags in input to the compiler.
+This last point is implemented via passing the credentials as build flags for the C++ compiler, using the **Dynamic build flags** feature of the Platformio pipeline, where you can redirect the stdout of a script or executable towards the build flags in input to the compiler.
 
 
 ### The board and the hardware

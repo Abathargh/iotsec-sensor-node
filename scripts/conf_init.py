@@ -74,7 +74,7 @@ def input_conf():
         "FINGERPRINT": generate_fingerprint()
     }
 
-    with open("data.json", "w") as fout:
+    with open("../data.json", "w") as fout:
         json.dump(config, fout, indent=4)
 
 
